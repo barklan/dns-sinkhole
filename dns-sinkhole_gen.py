@@ -11,7 +11,7 @@
 # The above copyright notice and this permission notice shall be included in all copies or
 # substantial portions of the Software.
 
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 # INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 # PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
 # FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
@@ -69,106 +69,30 @@ dnscrypt_outmessage = ("Move it to /etc/dnscrypt-proxy/ and add the following co
 ########################################
 
 domains_blacklists = [
-#    {
-#      'name': 'Cameleon blocklist',
-#      'url':  'https://sysctl.org/cameleon/hosts'
-#    },
-#    {
-#      'name': 'Xiaomi spyware blocklist (kevle2)',
-#      'url':  'https://raw.githubusercontent.com/kevle2/XiaomiSpywareBlockList/master/xiaomiblock.txt'
-#    },
     {
       'name': 'My custom blocklist',
       'url':  'file:///home/' + os.environ['USER']  + '/dns-sinkhole.txt'
     },
     {
-      'name': 'Simple tracking',
-      'url':  'https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt'
-    },
-    {
-      'name': 'Simple ads',
-      'url':  'https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt'
-    },
-    {
-      'name': 'Zeustracker blocklist',
-      'url':  'https://zeustracker.abuse.ch/blocklist.php?download=domainblocklist'
-    },
-    {
-      'name': 'Zeustracker baddomains',
-      'url':  'https://zeustracker.abuse.ch/blocklist.php?download=baddomains'
-    },
-    { 
       'name': 'StevenBlack blocklist',
       'url':  'https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts'
-    },
-    { 
-      'name': 'Malwaredomains blocklist',
-      'url':  'https://mirror1.malwaredomains.com/files/justdomains'
-    },
-    {
-      'name': 'Ad servers',
-      'url':  'https://hosts-file.net/ad_servers.txt'
     },
     {
       'name': 'YouTube ads (kboghdady)',
       'url':  'https://raw.githubusercontent.com/kboghdady/youTube_ads_4_pi-hole/master/black.list'
     },
     {
-      'name': 'YouTube ads (Akamaru)',
-      'url':  'https://raw.githubusercontent.com/Akamaru/Pi-Hole-Lists/master/youtube.txt'
-    },
-    {
-      'name': 'HbbTV ads (Akamaru)',
-      'url':  'https://raw.githubusercontent.com/Akamaru/Pi-Hole-Lists/master/hbbtv.txt'
-    },
-    {
-      'name': 'Windows ads (Akamaru)',
-      'url':  'https://raw.githubusercontent.com/Akamaru/Pi-Hole-Lists/master/nomsdata.txt'
-    },
-    {
-      'name': 'Android & iOS ads (Akamaru)',
-      'url':  'https://raw.githubusercontent.com/Akamaru/Pi-Hole-Lists/master/appads.txt'
-    },
-    {
-      'name': 'Fake jailbreak websites (Akamaru)',
-      'url':  'https://raw.githubusercontent.com/Akamaru/Pi-Hole-Lists/master/jbfake.txt'
-    },
-    {
-      'name': 'Adobe updates (Akamaru)',
-      'url':  'https://raw.githubusercontent.com/Akamaru/Pi-Hole-Lists/master/adobeblock.txt'
-    },
-    {
-      'name': 'Fake emulators (Akamaru)',
-      'url':  'https://raw.githubusercontent.com/Akamaru/Pi-Hole-Lists/master/gamefake.txt'
-    },
-    {
-      'name': 'ADsecu blocklist',
-      'url':  'https://raw.githubusercontent.com/ADsecu/black-domains/master/domain_hosts.txt'
-    },
-    {
-      'name': 'SweetSophia blocklist',
-      'url':  'https://raw.githubusercontent.com/SweetSophia/mifitxiaomipiholelist/master/mifitblocklist.txt'
-    },
-    {
-      'name': 'Android ads (SweetSophia)',
-      'url':  'https://raw.githubusercontent.com/SweetSophia/androidappspihole/master/testrareandroappblock.txt'
-    },
-    {
-      'name': 'Blocklist (zebpalmer)',
-      'url':  'https://raw.githubusercontent.com/zebpalmer/dns_blocklists/master/blocklist.txt'
-    },
-    {
       'name': 'Ads and tracking extended (lightswitch05)',
-      'url':  'https://raw.githubusercontent.com/lightswitch05/hosts/master/ads-and-tracking-extended.txt'
+      'url':  'https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/ads-and-tracking-extended.txt'
     },
     {
-      'name': 'Amp hosts extended (lightswitch05)',
-      'url':  'https://raw.githubusercontent.com/lightswitch05/hosts/master/amp-hosts-extended.txt'
+      'name': 'Facebook (lightswitch05)',
+      'url':  'https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/facebook-extended.txt'
     },
-    {
-      'name': 'Tracking aggressive (lightswitch05)',
-      'url':  'https://raw.githubusercontent.com/lightswitch05/hosts/master/tracking-aggressive-extended.txt'
-    },
+    # {
+    #   'name': 'Tracking aggressive (lightswitch05)',
+    #   'url':  'https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/tracking-aggressive-extended.txt'
+    # },
     {
       'name': 'dnscrypt.info blacklist',
       'url':  'https://download.dnscrypt.info/blacklists/domains/mybase.txt'
@@ -201,18 +125,6 @@ domains_blacklists = [
       'name': 'dnscrypt - misc blocklist',
       'url':  'https://raw.githubusercontent.com/zeffy/dnscrypt-blocking-additions/master/hosts/blacklist/misc.txt'
     },
-    {
-      'name': 'WindowsSpyBlocker - spy (crazy-max)',
-      'url':  'https://raw.githubusercontent.com/crazy-max/WindowsSpyBlocker/master/data/dnscrypt/spy.txt'
-    },
-    {
-      'name': 'WindowsSpyBlocker - update (crazy-max)',
-      'url':  'https://raw.githubusercontent.com/crazy-max/WindowsSpyBlocker/master/data/dnscrypt/update.txt'
-    },
-    {
-      'name': 'WindowsSpyBlocker - extra (crazy-max)',
-      'url':  'https://raw.githubusercontent.com/crazy-max/WindowsSpyBlocker/master/data/dnscrypt/extra.txt'
-    }
 ]
 
 ########################################
