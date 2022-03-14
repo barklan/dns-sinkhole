@@ -69,10 +69,10 @@ dnscrypt_outmessage = ("Move it to /etc/dnscrypt-proxy/ and add the following co
 ########################################
 
 domains_blacklists = [
-    {
-      'name': 'My custom blocklist',
-      'url':  'file:///home/' + os.environ['USER']  + '/dns-sinkhole.txt'
-    },
+    # {
+    #   'name': 'My custom blocklist',
+    #   'url':  'file:///home/' + os.environ['USER']  + '/dns-sinkhole.txt'
+    # },
     {
       'name': 'StevenBlack blocklist',
       'url':  'https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts'
@@ -85,56 +85,24 @@ domains_blacklists = [
       'name': 'Ads and tracking extended (lightswitch05)',
       'url':  'https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/ads-and-tracking-extended.txt'
     },
-    {
-      'name': 'Facebook (lightswitch05)',
-      'url':  'https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/facebook-extended.txt'
-    },
+    # {
+    #   'name': 'Facebook (lightswitch05)',
+    #   'url':  'https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/facebook-extended.txt'
+    # },
     # {
     #   'name': 'Tracking aggressive (lightswitch05)',
     #   'url':  'https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/tracking-aggressive-extended.txt'
     # },
-    {
-      'name': 'dnscrypt.info blacklist',
-      'url':  'https://download.dnscrypt.info/blacklists/domains/mybase.txt'
-    },
-    {
-      'name': 'dnscrypt-proxy blacklist',
-      'url':  'https://raw.githubusercontent.com/CNMan/dnscrypt-proxy-config/master/dnscrypt-blacklist-domains.txt'
-    },
-    {
-      'name': 'dnscrypt - activation blocklist',
-      'url':  'https://raw.githubusercontent.com/zeffy/dnscrypt-blocking-additions/master/hosts/blacklist/activation.txt'
-    },
-    {
-      'name': 'dnscrypt - ads blocklist',
-      'url':  'https://raw.githubusercontent.com/zeffy/dnscrypt-blocking-additions/master/hosts/blacklist/ads.txt'
-    },
-    {
-      'name': 'dnscrypt - anticheat blocklist',
-      'url':  'https://raw.githubusercontent.com/zeffy/dnscrypt-blocking-additions/master/hosts/blacklist/anticheat.txt'
-    },
-    {
-      'name': 'dnscrypt - fakenews blocklist',
-      'url':  'https://raw.githubusercontent.com/zeffy/dnscrypt-blocking-additions/master/hosts/blacklist/fakenews.txt'
-    },
-    {
-      'name': 'dnscrypt - tracking blocklist',
-      'url':  'https://raw.githubusercontent.com/zeffy/dnscrypt-blocking-additions/master/hosts/blacklist/tracking.txt'
-    },
-    {
-      'name': 'dnscrypt - misc blocklist',
-      'url':  'https://raw.githubusercontent.com/zeffy/dnscrypt-blocking-additions/master/hosts/blacklist/misc.txt'
-    },
 ]
 
 ########################################
 # Exclude these pre-blacklisted domains from the final DNS sinkhole blacklist
 
 domains_whitelists = [
-#    {
-#      'name': 'My custom whitelist',
-#      'url':  'file:///home/' + os.environ['USER']  + '/dns-whitelist.txt'
-#    }
+   {
+     'name': 'My custom whitelist',
+     'url':  'file://' + os.getcwd()  + '/lists/whitelist.txt'
+   }
 ]
 
 ########################################
