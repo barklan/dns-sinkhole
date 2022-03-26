@@ -53,9 +53,6 @@ pdnsd_tempfile    = pdnsd_datafile + '.tmp'
 
 pdnsd_fileheader  = "// Auto-generated list, build date " + timestamp_long + "\n// No addresses of these domains must be resolved" + "\n\n"
 
-pdnsd_outmessage  = ("Move it to /etc/ folder and add the following configuration setting in /etc/pdnsd.conf:\n\n" + \
-"//Blacklisted domains\ninclude { file = \"/etc/" + pdnsd_datafile + "\"; }\n\n--------------------\nRestart pdnsd by issuing command 'systemctl restart pdnsd'\n\nYou may need to delete your pdnsd.cache file before the list rules apply.\n")
-
 ####################
 
 dnscrypt_datafile   = 'dnscrypt.cloaking.txt'
@@ -63,8 +60,10 @@ dnscrypt_tempfile   = dnscrypt_datafile + ".tmp"
 
 dnscrypt_fileheader = "# Auto-generated list, build date " + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + "\n# No addresses of these domains must be resolved" + "\n\n"
 
-dnscrypt_outmessage = ("Move it to /etc/dnscrypt-proxy/ and add the following configuration setting in\n/etc/dnscrypt-proxy/dnscrypt-proxy.toml:\n\n" + \
-"cloaking_rules = '/etc/dnscrypt-proxy/" + dnscrypt_datafile + "'\n\n--------------------\nRestart dnscrypt-proxy by issuing command 'systemctl restart dnscrypt-proxy'\n")
+####################
+
+unbound_datafile   = 'blacklist.conf'
+unbound_tempfile   = unbound_datafile + ".tmp"
 
 ########################################
 
@@ -162,6 +161,7 @@ def fetchdomaindata(dataset):
 
 filewrite(filepath, pdnsd_datafile, pdnsd_fileheader, 'w', True)
 filewrite(filepath, dnscrypt_datafile, dnscrypt_fileheader, 'w', True)
+filewrite(filepath, unbound_datafile, "", 'w', True)
 
 ####################
 # Download and parse white/blocklists
@@ -192,15 +192,20 @@ for blacklist in domains_blacklists:
                 else:
                     pdnsd_line    = "rr { name=" + line + "; a=0.0.0.0; }"
                     dnscrypt_line = line + " " + "0.0.0.0"
+                    unbound_line = "local-zone: \"" + line + "\" always_refuse"
+
 
                 filewrite(filepath, pdnsd_tempfile, pdnsd_line + '\n', 'a', False)
 
                 if not dnscrypt_line is None:
                     filewrite(filepath, dnscrypt_tempfile, dnscrypt_line + '\n', 'a', False)
 
+                if not unbound_line is None:
+                    filewrite(filepath, unbound_tempfile, unbound_line + '\n', 'a', False)
+
 ####################
 # Parse generated list, get only unique lines and write to final file
-def parseuniqlines(filepath, tempfile, outfile, outmessage):
+def parseuniqlines(filepath, tempfile, outfile):
   uniqdata = set()
   with open(os.path.join(filepath, outfile),'a') as f:
       for line in open(os.path.join(filepath, tempfile),'r'):
@@ -212,10 +217,10 @@ def parseuniqlines(filepath, tempfile, outfile, outmessage):
   print("----------------------------------------")
   print("Added " + str(len(set(uniqdata))) + " unique domains to the sinkhole file " + filepath + outfile)
   print("DNS sinkhole file " + filepath + outfile + " generated successfully.")
-  print(outmessage)
 
-parseuniqlines(filepath, pdnsd_tempfile, pdnsd_datafile, pdnsd_outmessage)
-parseuniqlines(filepath, dnscrypt_tempfile, dnscrypt_datafile, dnscrypt_outmessage)
+parseuniqlines(filepath, pdnsd_tempfile, pdnsd_datafile)
+parseuniqlines(filepath, dnscrypt_tempfile, dnscrypt_datafile)
+parseuniqlines(filepath, unbound_tempfile, unbound_datafile)
 
 ####################
 # Inform user about failed DNS blocklist downloads

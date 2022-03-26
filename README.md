@@ -30,7 +30,7 @@ Useful for blocking ads, tracking & telemetry on:
 
 ### Tested on
 
-```
+```markdown
 Arch Linux (x86_64):           DNSCrypt server, pdnsd server
 Android (mobile phone, ARMv7): DNSCrypt server
 ```
