@@ -39,55 +39,67 @@ from socket import timeout
 
 ########################################
 
-url_useragent     = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:62.0) Gecko/20100101 Firefox/62.0'
-url_timeout       = 60
-filepath          = '/tmp/'
+url_useragent = (
+    "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:62.0) Gecko/20100101 Firefox/62.0"
+)
+url_timeout = 60
+filepath = "/tmp/"
 
-#timestamp_short   = datetime.now().strftime('%Y-%m-%d')
-timestamp_long    = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-####################
-
-pdnsd_datafile    = 'pdnsd.sinkhole'
-pdnsd_tempfile    = pdnsd_datafile + '.tmp'
-
-pdnsd_fileheader  = "// Auto-generated list, build date " + timestamp_long + "\n// No addresses of these domains must be resolved" + "\n\n"
+# timestamp_short   = datetime.now().strftime('%Y-%m-%d')
+timestamp_long = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 ####################
 
-dnscrypt_datafile   = 'dnscrypt.cloaking.txt'
-dnscrypt_tempfile   = dnscrypt_datafile + ".tmp"
+pdnsd_datafile = "pdnsd.sinkhole"
+pdnsd_tempfile = pdnsd_datafile + ".tmp"
 
-dnscrypt_fileheader = "# Auto-generated list, build date " + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + "\n# No addresses of these domains must be resolved" + "\n\n"
+pdnsd_fileheader = (
+    "// Auto-generated list, build date "
+    + timestamp_long
+    + "\n// No addresses of these domains must be resolved"
+    + "\n\n"
+)
 
 ####################
 
-unbound_datafile   = 'blacklist.conf'
-unbound_tempfile   = unbound_datafile + ".tmp"
+dnscrypt_datafile = "dnscrypt.cloaking.txt"
+dnscrypt_tempfile = dnscrypt_datafile + ".tmp"
+
+dnscrypt_fileheader = (
+    "# Auto-generated list, build date "
+    + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    + "\n# No addresses of these domains must be resolved"
+    + "\n\n"
+)
+
+####################
+
+unbound_datafile = "blacklist.conf"
+unbound_tempfile = unbound_datafile + ".tmp"
 
 ########################################
 
 domains_blacklists = [
-    # {
-    #   'name': 'My custom blocklist',
-    #   'url':  'file:///home/' + os.environ['USER']  + '/dns-sinkhole.txt'
-    # },
     {
-      'name': 'StevenBlack blocklist',
-      'url':  'https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts'
+        "name": "My custom blocklist",
+        "url": "file:///home/" + os.getcwd() + "/lists/blacklist.txt",
     },
     {
-      'name': 'YouTube ads (kboghdady)',
-      'url':  'https://raw.githubusercontent.com/kboghdady/youTube_ads_4_pi-hole/master/black.list'
+        "name": "StevenBlack blocklist",
+        "url": "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
     },
     {
-      'name': 'Ads and tracking extended (lightswitch05)',
-      'url':  'https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/ads-and-tracking-extended.txt'
+        "name": "YouTube ads (kboghdady)",
+        "url": "https://raw.githubusercontent.com/kboghdady/youTube_ads_4_pi-hole/master/black.list",
     },
-    # {
-    #   'name': 'Facebook (lightswitch05)',
-    #   'url':  'https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/facebook-extended.txt'
-    # },
+    {
+        "name": "Ads and tracking extended (lightswitch05)",
+        "url": "https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/ads-and-tracking-extended.txt",
+    },
+    {
+        "name": "Facebook (lightswitch05)",
+        "url": "https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/facebook-extended.txt",
+    },
     # {
     #   'name': 'Tracking aggressive (lightswitch05)',
     #   'url':  'https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/tracking-aggressive-extended.txt'
@@ -98,10 +110,10 @@ domains_blacklists = [
 # Exclude these pre-blacklisted domains from the final DNS sinkhole blacklist
 
 domains_whitelists = [
-   {
-     'name': 'My custom whitelist',
-     'url':  'file://' + os.getcwd()  + '/lists/whitelist.txt'
-   }
+    {
+        "name": "My custom whitelist",
+        "url": "file://" + os.getcwd() + "/lists/whitelist.txt",
+    }
 ]
 
 ########################################
@@ -110,45 +122,53 @@ failedlists = []
 
 ##########
 def filewrite(filepath, datafile, string, operationmode, closefile):
-    with open(os.path.join(filepath, datafile),operationmode) as f:
+    with open(os.path.join(filepath, datafile), operationmode) as f:
         f.write(string)
     if closefile is True:
-      f.close()
+        f.close()
+
 
 ##########
-def getlist(domainlist,timeout):
+def getlist(domainlist, timeout):
     if not domainlist is None:
         try:
-            print("Processing list:\t\t" + domainlist['name'])
-            request = URL.Request(domainlist['url'],headers={'User-Agent': url_useragent})
-            return np.array(URL.urlopen(request, timeout=timeout).read().decode('utf-8').split('\n'))
+            print("Processing list:\t\t" + domainlist["name"])
+            request = URL.Request(
+                domainlist["url"], headers={"User-Agent": url_useragent}
+            )
+            return np.array(
+                URL.urlopen(request, timeout=timeout).read().decode("utf-8").split("\n")
+            )
 
         except KeyboardInterrupt:
             exit(0)
 
         except:
-            print("Data retrieval failed:\t\t" + domainlist['url'] + "\n")
-            failedlists.append(domainlist['name'])
+            print("Data retrieval failed:\t\t" + domainlist["url"] + "\n")
+            failedlists.append(domainlist["name"])
             pass
+
 
 ##########
 def fetchdomaindata(dataset):
     fetched_data = set()
     if not dataset is None:
         for line in dataset:
-            if not re.search('.*:.*', line) \
-            and not re.search('[\[|\]]', line) \
-            and not re.search('^.*#', line) \
-            and not re.search('.*localhost.*', line) \
-            and not re.search('\slocal$', line) \
-            and not re.search('^$', line) \
-            and re.search('[a-z]+', line):
-                line = re.sub(r'^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+[ \t]+','',line)
+            if (
+                not re.search(".*:.*", line)
+                and not re.search("[\[|\]]", line)
+                and not re.search("^.*#", line)
+                and not re.search(".*localhost.*", line)
+                and not re.search("\slocal$", line)
+                and not re.search("^$", line)
+                and re.search("[a-z]+", line)
+            ):
+                line = re.sub(r"^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+[ \t]+", "", line)
 
                 # Windows EOL last character substitution, corrects misformatted line variable
-                line = re.sub('[\n]?\r$','',line)
+                line = re.sub("[\n]?\r$", "", line)
 
-                if not re.match('^$',line):
+                if not re.match("^$", line):
                     fetched_data.add(line)
 
         if len(set(fetched_data)) == 0:
@@ -156,12 +176,13 @@ def fetchdomaindata(dataset):
 
         return fetched_data
 
+
 ########################################
 # DNS sinkhole file headers
 
-filewrite(filepath, pdnsd_datafile, pdnsd_fileheader, 'w', True)
-filewrite(filepath, dnscrypt_datafile, dnscrypt_fileheader, 'w', True)
-filewrite(filepath, unbound_datafile, "", 'w', True)
+filewrite(filepath, pdnsd_datafile, pdnsd_fileheader, "w", True)
+filewrite(filepath, dnscrypt_datafile, dnscrypt_fileheader, "w", True)
+filewrite(filepath, unbound_datafile, "", "w", True)
 
 ####################
 # Download and parse white/blocklists
@@ -181,42 +202,50 @@ for blacklist in domains_blacklists:
     blacklist_dataset = getlist(blacklist, url_timeout)
 
     if not blacklist_dataset is None:
-        for line in (fetchdomaindata(blacklist_dataset)):
+        for line in fetchdomaindata(blacklist_dataset):
 
             if not line in whitelist_fetched_data:
 
-                if re.search('^\.', line):
-                    pdnsd_line    = "neg { name=*" + line + "; types = domain; }"
-                elif re.search('\*', line):
-                    pdnsd_line    = "neg { name=" + line + "; types = domain; }"
+                if re.search("^\.", line):
+                    pdnsd_line = "neg { name=*" + line + "; types = domain; }"
+                elif re.search("\*", line):
+                    pdnsd_line = "neg { name=" + line + "; types = domain; }"
                 else:
-                    pdnsd_line    = "rr { name=" + line + "; a=0.0.0.0; }"
+                    pdnsd_line = "rr { name=" + line + "; a=0.0.0.0; }"
                     dnscrypt_line = line + " " + "0.0.0.0"
-                    unbound_line = "local-zone: \"" + line + "\" always_refuse"
+                    unbound_line = 'local-zone: "' + line + '" always_refuse'
 
-
-                filewrite(filepath, pdnsd_tempfile, pdnsd_line + '\n', 'a', False)
+                filewrite(filepath, pdnsd_tempfile, pdnsd_line + "\n", "a", False)
 
                 if not dnscrypt_line is None:
-                    filewrite(filepath, dnscrypt_tempfile, dnscrypt_line + '\n', 'a', False)
+                    filewrite(
+                        filepath, dnscrypt_tempfile, dnscrypt_line + "\n", "a", False
+                    )
 
                 if not unbound_line is None:
-                    filewrite(filepath, unbound_tempfile, unbound_line + '\n', 'a', False)
+                    filewrite(filepath, unbound_tempfile, unbound_line + "\n", "a", False)
 
 ####################
 # Parse generated list, get only unique lines and write to final file
 def parseuniqlines(filepath, tempfile, outfile):
-  uniqdata = set()
-  with open(os.path.join(filepath, outfile),'a') as f:
-      for line in open(os.path.join(filepath, tempfile),'r'):
-          if not line in uniqdata:
-              f.write(line)
-              uniqdata.add(line)
-      f.close()
-  os.remove(os.path.join(filepath, tempfile))
-  print("----------------------------------------")
-  print("Added " + str(len(set(uniqdata))) + " unique domains to the sinkhole file " + filepath + outfile)
-  print("DNS sinkhole file " + filepath + outfile + " generated successfully.")
+    uniqdata = set()
+    with open(os.path.join(filepath, outfile), "a") as f:
+        for line in open(os.path.join(filepath, tempfile), "r"):
+            if not line in uniqdata:
+                f.write(line)
+                uniqdata.add(line)
+        f.close()
+    os.remove(os.path.join(filepath, tempfile))
+    print("----------------------------------------")
+    print(
+        "Added "
+        + str(len(set(uniqdata)))
+        + " unique domains to the sinkhole file "
+        + filepath
+        + outfile
+    )
+    print("DNS sinkhole file " + filepath + outfile + " generated successfully.")
+
 
 parseuniqlines(filepath, pdnsd_tempfile, pdnsd_datafile)
 parseuniqlines(filepath, dnscrypt_tempfile, dnscrypt_datafile)

@@ -8,6 +8,7 @@ authors = [
 license-expression = "MIT"
 dependencies = [
     "numpy>=1.22.3",
+    "black>=22.3.0",
 ]
 requires-python = ">=3.10"
 
