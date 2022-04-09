@@ -59,14 +59,14 @@ domains_blacklists = [
         "name": "Ads and tracking extended (lightswitch05)",
         "url": "https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/ads-and-tracking-extended.txt",
     },
-    {
-        "name": "Facebook (lightswitch05)",
-        "url": "https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/facebook-extended.txt",
-    },
-    {
-        "name": "Tracking aggressive (lightswitch05)",
-        "url": "https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/tracking-aggressive-extended.txt",
-    },
+    # {
+    #     "name": "Facebook (lightswitch05)",
+    #     "url": "https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/facebook-extended.txt",
+    # },
+    # {
+    #     "name": "Tracking aggressive (lightswitch05)",
+    #     "url": "https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/tracking-aggressive-extended.txt",
+    # },
 ]
 
 domains_whitelists = [
