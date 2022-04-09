@@ -1,29 +1,3 @@
-#!/bin/env python3
-
-# Copyright 2019 Pekka Helenius
-
-# Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-# and associated documentation files (the "Software"), to deal in the Software without restriction,
-# including without limitation the rights to use, copy, modify, merge, publish, distribute,
-# sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-
-# The above copyright notice and this permission notice shall be included in all copies or
-# substantial portions of the Software.
-
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
-# PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
-# FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-########################################
-
-# Simple DNS sinkhole file generation for DNSCrypt & pdnsd servers
-# Block DNS query resolutions for specific network domains
-
-########################################
-
 import os
 import re
 import readline
@@ -37,18 +11,13 @@ import urllib.request as URL
 from datetime import datetime
 from socket import timeout
 
-########################################
-
 url_useragent = (
     "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:62.0) Gecko/20100101 Firefox/62.0"
 )
 url_timeout = 60
 filepath = "/tmp/"
 
-# timestamp_short   = datetime.now().strftime('%Y-%m-%d')
 timestamp_long = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-####################
 
 pdnsd_datafile = "pdnsd.sinkhole"
 pdnsd_tempfile = pdnsd_datafile + ".tmp"
@@ -60,8 +29,6 @@ pdnsd_fileheader = (
     + "\n\n"
 )
 
-####################
-
 dnscrypt_datafile = "dnscrypt.cloaking.txt"
 dnscrypt_tempfile = dnscrypt_datafile + ".tmp"
 
@@ -72,12 +39,8 @@ dnscrypt_fileheader = (
     + "\n\n"
 )
 
-####################
-
 unbound_datafile = "blacklist.conf"
 unbound_tempfile = unbound_datafile + ".tmp"
-
-########################################
 
 domains_blacklists = [
     {
@@ -101,13 +64,10 @@ domains_blacklists = [
         "url": "https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/facebook-extended.txt",
     },
     {
-      'name': 'Tracking aggressive (lightswitch05)',
-      'url':  'https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/tracking-aggressive-extended.txt'
+        "name": "Tracking aggressive (lightswitch05)",
+        "url": "https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/tracking-aggressive-extended.txt",
     },
 ]
-
-########################################
-# Exclude these pre-blacklisted domains from the final DNS sinkhole blacklist
 
 domains_whitelists = [
     {
@@ -116,11 +76,9 @@ domains_whitelists = [
     }
 ]
 
-########################################
-
 failedlists = []
 
-##########
+
 def filewrite(filepath, datafile, string, operationmode, closefile):
     with open(os.path.join(filepath, datafile), operationmode) as f:
         f.write(string)
@@ -128,7 +86,6 @@ def filewrite(filepath, datafile, string, operationmode, closefile):
         f.close()
 
 
-##########
 def getlist(domainlist, timeout):
     if not domainlist is None:
         try:
@@ -149,7 +106,6 @@ def getlist(domainlist, timeout):
             pass
 
 
-##########
 def fetchdomaindata(dataset):
     fetched_data = set()
     if not dataset is None:
@@ -177,17 +133,10 @@ def fetchdomaindata(dataset):
         return fetched_data
 
 
-########################################
-# DNS sinkhole file headers
-
 filewrite(filepath, pdnsd_datafile, pdnsd_fileheader, "w", True)
 filewrite(filepath, dnscrypt_datafile, dnscrypt_fileheader, "w", True)
 filewrite(filepath, unbound_datafile, "", "w", True)
 
-####################
-# Download and parse white/blocklists
-
-##########
 if domains_whitelists:
     for whitelist in domains_whitelists:
         whitelist_dataset = getlist(whitelist, url_timeout)
@@ -196,8 +145,6 @@ if domains_whitelists:
 else:
     whitelist_fetched_data = set()
 
-
-##########
 for blacklist in domains_blacklists:
     blacklist_dataset = getlist(blacklist, url_timeout)
 
@@ -225,8 +172,7 @@ for blacklist in domains_blacklists:
                 if not unbound_line is None:
                     filewrite(filepath, unbound_tempfile, unbound_line + "\n", "a", False)
 
-####################
-# Parse generated list, get only unique lines and write to final file
+
 def parseuniqlines(filepath, tempfile, outfile):
     uniqdata = set()
     with open(os.path.join(filepath, outfile), "a") as f:
@@ -251,8 +197,6 @@ parseuniqlines(filepath, pdnsd_tempfile, pdnsd_datafile)
 parseuniqlines(filepath, dnscrypt_tempfile, dnscrypt_datafile)
 parseuniqlines(filepath, unbound_tempfile, unbound_datafile)
 
-####################
-# Inform user about failed DNS blocklist downloads
 if len(failedlists) > 0:
     print("Warning: could not get data for the following blocklists:\n")
     for i in range(len(failedlists)):
