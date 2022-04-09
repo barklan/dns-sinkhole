@@ -100,10 +100,10 @@ domains_blacklists = [
         "name": "Facebook (lightswitch05)",
         "url": "https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/facebook-extended.txt",
     },
-    # {
-    #   'name': 'Tracking aggressive (lightswitch05)',
-    #   'url':  'https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/tracking-aggressive-extended.txt'
-    # },
+    {
+      'name': 'Tracking aggressive (lightswitch05)',
+      'url':  'https://raw.githubusercontent.com/lightswitch05/hosts/master/docs/lists/tracking-aggressive-extended.txt'
+    },
 ]
 
 ########################################
