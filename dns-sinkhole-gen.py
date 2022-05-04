@@ -15,29 +15,9 @@ url_useragent = (
     "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:62.0) Gecko/20100101 Firefox/62.0"
 )
 url_timeout = 60
-filepath = "/tmp/"
+filepath = "./unbound/"
 
 timestamp_long = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-pdnsd_datafile = "pdnsd.sinkhole"
-pdnsd_tempfile = pdnsd_datafile + ".tmp"
-
-pdnsd_fileheader = (
-    "// Auto-generated list, build date "
-    + timestamp_long
-    + "\n// No addresses of these domains must be resolved"
-    + "\n\n"
-)
-
-dnscrypt_datafile = "dnscrypt.cloaking.txt"
-dnscrypt_tempfile = dnscrypt_datafile + ".tmp"
-
-dnscrypt_fileheader = (
-    "# Auto-generated list, build date "
-    + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    + "\n# No addresses of these domains must be resolved"
-    + "\n\n"
-)
 
 unbound_datafile = "blacklist.conf"
 unbound_tempfile = unbound_datafile + ".tmp"
@@ -133,8 +113,6 @@ def fetchdomaindata(dataset):
         return fetched_data
 
 
-filewrite(filepath, pdnsd_datafile, pdnsd_fileheader, "w", True)
-filewrite(filepath, dnscrypt_datafile, dnscrypt_fileheader, "w", True)
 filewrite(filepath, unbound_datafile, "", "w", True)
 
 if domains_whitelists:
@@ -154,20 +132,11 @@ for blacklist in domains_blacklists:
             if not line in whitelist_fetched_data:
 
                 if re.search("^\.", line):
-                    pdnsd_line = "neg { name=*" + line + "; types = domain; }"
+                    pass
                 elif re.search("\*", line):
-                    pdnsd_line = "neg { name=" + line + "; types = domain; }"
+                    pass
                 else:
-                    pdnsd_line = "rr { name=" + line + "; a=0.0.0.0; }"
-                    dnscrypt_line = line + " " + "0.0.0.0"
                     unbound_line = 'local-zone: "' + line + '" always_refuse'
-
-                filewrite(filepath, pdnsd_tempfile, pdnsd_line + "\n", "a", False)
-
-                if not dnscrypt_line is None:
-                    filewrite(
-                        filepath, dnscrypt_tempfile, dnscrypt_line + "\n", "a", False
-                    )
 
                 if not unbound_line is None:
                     filewrite(filepath, unbound_tempfile, unbound_line + "\n", "a", False)
@@ -193,8 +162,6 @@ def parseuniqlines(filepath, tempfile, outfile):
     print("DNS sinkhole file " + filepath + outfile + " generated successfully.")
 
 
-parseuniqlines(filepath, pdnsd_tempfile, pdnsd_datafile)
-parseuniqlines(filepath, dnscrypt_tempfile, dnscrypt_datafile)
 parseuniqlines(filepath, unbound_tempfile, unbound_datafile)
 
 if len(failedlists) > 0:
